@@ -50,7 +50,7 @@ sources += [
 #endif
 
 let package = Package(
-    name: "CGLFW3",
+    name: "glfw",
     products: [
         .library(name: "CGLFW3", targets: ["CGLFW3"])
     ],
@@ -63,11 +63,12 @@ let package = Package(
                 "CMakeLists.txt", "LICENSE.md", "README.md",
                 "src/CMakeLists.txt"
             ],
-            sources: sources.map("src/".appending) + ["include"],
+            sources: sources.map { "src/" + $0 } + ["include"],
             publicHeadersPath: "include",
             cSettings: [
                 .headerSearchPath("src"),
                 .headerSearchPath("include"),
+                .unsafeFlags(["-Wno-macro-redefined"]),
                 // TODO: Find a "safe" way to disable ARC in GLFW's Cocoa backend
                 .unsafeFlags(["-fno-objc-arc"], .when(platforms: [.macOS])),
                 .define("_GLFW_COCOA", .when(platforms: [.macOS])),
