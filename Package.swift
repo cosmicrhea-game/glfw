@@ -68,9 +68,13 @@ let package = Package(
             cSettings: [
                 .headerSearchPath("src"),
                 .headerSearchPath("include"),
+                //.unsafeFlags(["-H"]),
+                .unsafeFlags(["-I/usr/local/include"]),
+//                .unsafeFlags(["-isystem", "/usr/local/include"]),
                 .unsafeFlags(["-Wno-macro-redefined"]),
                 // TODO: Find a "safe" way to disable ARC in GLFW's Cocoa backend
                 .unsafeFlags(["-fno-objc-arc"], .when(platforms: [.macOS])),
+                //.define("GLFW_INCLUDE_VULKAN"),
                 .define("_GLFW_COCOA", .when(platforms: [.macOS])),
                 .define("GLFW_EXPOSE_NATIVE_COCOA", .when(platforms: [.macOS])),
                 .define("GLFW_EXPOSE_NATIVE_NSGL", .when(platforms: [.macOS])),
@@ -89,23 +93,45 @@ let package = Package(
             name: "CGLFW3",
             dependencies: ["glfw3"],
             cSettings: [
+                .unsafeFlags(["-I/usr/local/include"]),
+                .unsafeFlags(["-isystem", "/usr/local/include"]),
+                .unsafeFlags(["-I/opt/homebrew/include"]),
+                .unsafeFlags(["-isystem", "/opt/homebrew/include"]),
+                .define("GLFW_INCLUDE_VULKAN"),
                 .define("_GLFW_COCOA", .when(platforms: [.macOS])),
                 .define("GLFW_EXPOSE_NATIVE_COCOA", .when(platforms: [.macOS])),
                 .define("GLFW_EXPOSE_NATIVE_NSGL", .when(platforms: [.macOS])),
                 .define("_GLFW_WIN32", .when(platforms: [.windows])),
                 .define("_GLFW_X11", .when(platforms: [.linux])),
+            ],
+            swiftSettings: [
+              .unsafeFlags([
+                "-Xcc", "-isystem", "-Xcc", "/opt/homebrew/include",
+                "-Xcc", "-I", "-Xcc", "/opt/homebrew/include"
+              ])
             ]
         ),
         .testTarget(
             name: "CGLFW3Tests",
             dependencies: ["CGLFW3"],
             cSettings: [
+                .unsafeFlags(["-I/usr/local/include"]),
+                .unsafeFlags(["-isystem", "/usr/local/include"]),
+                .unsafeFlags(["-I/opt/homebrew/include"]),
+                .unsafeFlags(["-isystem", "/opt/homebrew/include"]),
+                .define("GLFW_INCLUDE_VULKAN"),
                 .define("GL_SILENCE_DEPRECATION", .when(platforms: [.macOS])),
                 .define("_GLFW_COCOA", .when(platforms: [.macOS])),
                 .define("GLFW_EXPOSE_NATIVE_COCOA", .when(platforms: [.macOS])),
                 .define("GLFW_EXPOSE_NATIVE_NSGL", .when(platforms: [.macOS])),
                 .define("_GLFW_WIN32", .when(platforms: [.windows])),
                 .define("_GLFW_X11", .when(platforms: [.linux])),
+            ],
+            swiftSettings: [
+              .unsafeFlags([
+                "-Xcc", "-isystem", "-Xcc", "/opt/homebrew/include",
+                "-Xcc", "-I", "-Xcc", "/opt/homebrew/include"
+              ])
             ]
         )
     ]
